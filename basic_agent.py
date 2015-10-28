@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Avalam agent.
-Copyright (C) 2015, <<<<<<<<<<< YOUR NAMES HERE >>>>>>>>>>>
+Copyright (C) 2015, Hauet Alexandre & Vaessen Tanguy
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ class Agent:
         pairs (a, s) in which a is the action played to reach the
         state s; s is the new state, i.e. a triplet (b, p, st) where
         b is the new board after the action a has been played,
-        p is the player to play the next move and st is the next
-        step number.
+        p is the player to play the next move and
+        st is the next step number.
         """
         pass
 
