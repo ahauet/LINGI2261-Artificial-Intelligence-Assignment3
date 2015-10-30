@@ -34,19 +34,36 @@ class Agent:
         p is the player to play the next move and
         st is the next step number.
         """
-        pass
+        #the received state is a tuple: 0:board, 1:player, 2:step
+        for action in state[0].get_actions():
+            newBoard = state[0].clone()
+            newBoard.play_action(action)
+            nextPlayer = state[1] * -1
+            nextStep = state[2] + 1
+            newState = (newBoard, nextPlayer, nextStep)
+            yield (action, newState)
 
     def cutoff(self, state, depth):
         """The cutoff function returns true if the alpha-beta/minimax
         search has to stop; false otherwise.
         """
-        pass
+        if(state[0].is_finished()):
+            return True
+        if(depth >= 2):
+            return True
+        return False
 
     def evaluate(self, state):
         """The evaluate function must return an integer value
         representing the utility function of the board.
         """
-        pass
+        score = state[0].get_score()
+        if(score < 0): #player 1 has advantage
+            return 1 if state[1] == 1 else -1
+        elif (score > 0): #player -1 has advantage
+            return 1 if state[1] == -1 else -1
+        else:
+            return 0
 
     def play(self, board, player, step, time_left):
         """This function is used to play a move according
