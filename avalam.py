@@ -200,6 +200,46 @@ class Board:
                         score += 1
         return score
 
+    def get_tower_at_the_origin_of_action(self, action):
+        """
+        Get a tower at pos (i,j) of the action
+        :return: a tower: positive if belong to current player, negative else
+        """
+        if not self.is_action_valid(action):
+            raise InvalidAction(action)
+        i1, j1, i2, j2 = action
+        return self.m[i1][j1]
+
+    def get_tower_targeted_by_action(self, action):
+        """
+        Return the tower targeted by the action
+        :param action:
+        :return:
+        """
+        if not self.is_action_valid(action):
+            raise InvalidAction(action)
+        i1, j1, i2, j2 = action
+        return self.m[i2][j2]
+
+    def action_cover_my_tower_with_an_opponent_tower(self, action):
+        """
+        Return true if the action cover one of my tower with a tower of the opponent
+        :param action:
+        :return:
+        """
+        origin = self.get_tower_at_the_origin_of_action(action)
+        target = self.get_tower_targeted_by_action(action)
+        return target > 0 and origin < 0
+
+    def action_cover_my_tower_with_an_other_tower(self, action):
+        """
+        Return true if the action cover one of my tower with another tower
+        :param action:
+        :return:
+        """
+        target = self.get_tower_targeted_by_action(action)
+        return target > 0
+
 
 def load_percepts(filename):
     """Load percepts from a CSV file."""
