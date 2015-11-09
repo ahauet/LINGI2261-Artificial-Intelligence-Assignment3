@@ -23,6 +23,9 @@ import minimax
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
+    WEIGHT_TOWER_FIVE_PLAYER1 = 1
+    WEIGHT_TOWER_FIVE_PLAYER2 = 2
+
     def __init__(self, name="Agent"):
         self.name = name
 
@@ -74,6 +77,7 @@ class Agent:
         representing the utility function of the board.
         """
         score = state[0].get_score()
+        score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
         return score
 
     def play(self, board, player, step, time_left):
