@@ -47,9 +47,10 @@ class Agent:
         """The cutoff function returns true if the alpha-beta/minimax
         search has to stop; false otherwise.
         """
+        maxDepth = 3 if state[2] >= 15 else 2
         if(state[0].is_finished()):
             return True
-        if(depth >= 2):
+        if(depth >= maxDepth):
             return True
         return False
 
