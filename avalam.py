@@ -200,22 +200,28 @@ class Board:
                         score += 1
         return score
 
-    def get_number_max_tower(self, weight_player1, weight_player2):
-        """Return a score for this board.
-
-        The score is the difference between the number of towers of each
-        player. In case of ties, it is the difference between the maximal
-        height towers of each player. If self.is_finished() returns True,
-        this score represents the winner (<0: red, >0: yellow, 0: draw).
-
+    def get_number_tower(self, weight_player1, weight_player2):
         """
+            Return the difference between the number of towers of each
+            player.
+        """
+        score = 0
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.m[i][j] < 0:
+                    score -= weight_player2
+                elif self.m[i][j] > 0:
+                    score += weight_player1
+        return score
+
+    def get_number_max_tower(self, weight_player1, weight_player2):
         result = 0
         for i in range(self.rows):
             for j in range(self.columns):
                 if self.m[i][j] == 5:
                     result += weight_player1
                 elif self.m[i][j] == -5:
-                    result += weight_player2
+                    result -= weight_player2
         return result
 
     def get_tower_at_the_origin_of_action(self, action):
