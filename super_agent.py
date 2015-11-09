@@ -36,6 +36,8 @@ class Agent:
         """
         #the received state is a tuple: 0:board, 1:player, 2:step
         board, player, step = state
+        ignored_mov = []
+        nbr_mov_yielded = 0
         for action in board.get_actions():
             if(not board.action_cover_my_tower_with_an_other_tower(action)):
                 newBoard = board.clone()
@@ -43,8 +45,19 @@ class Agent:
                 nextPlayer = player * -1
                 nextStep = step + 1
                 newState = (newBoard, nextPlayer, nextStep)
+                nbr_mov_yielded += 1
                 yield (action, newState)
-            #else ignore because the move is useless for us
+            else:
+                ignored_mov.append(action)
+        if nbr_mov_yielded == 0:
+            for action in ignored_mov:
+                newBoard = board.clone()
+                newBoard.play_action(action)
+                nextPlayer = player * -1
+                nextStep = step + 1
+                newState = (newBoard, nextPlayer, nextStep)
+                nbr_mov_yielded += 1
+                yield (action, newState)
 
     def cutoff(self, state, depth):
         """The cutoff function returns true if the alpha-beta/minimax
