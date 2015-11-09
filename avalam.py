@@ -221,6 +221,21 @@ class Board:
         i1, j1, i2, j2 = action
         return self.m[i2][j2]
 
+    def get_tower_height(self, action):
+        """
+        Return the height of the tower targeted by the action
+        :param action:
+        :return:
+        """
+        if not self.is_action_valid(action):
+            raise InvalidAction(action)
+        i1, j1, i2, j2 = action
+        return abs(self.m[i2][j2])
+
+    def get_color_neighborhood(self):
+        return -1
+
+
     def action_cover_my_tower_with_an_opponent_tower(self, action):
         """
         Return true if the action cover one of my tower with a tower of the opponent
@@ -239,6 +254,10 @@ class Board:
         """
         target = self.get_tower_targeted_by_action(action)
         return target > 0
+
+    def abs(n):
+        return (n, -n)[n < 0]
+
 
 
 def load_percepts(filename):
