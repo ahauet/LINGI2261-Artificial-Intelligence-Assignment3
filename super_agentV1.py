@@ -23,6 +23,15 @@ import minimax
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
+    WEIGHT_TOWER_FIVE_PLAYER1 = 2
+    WEIGHT_TOWER_FIVE_PLAYER2 = 4
+    WEIGHT_TOWER__PLAYER1 = 2
+    WEIGHT_TOWER__PLAYER2 = 4
+    WEIGHT_TOWER_FOUR_PLAYER1 = 4
+    WEIGHT_TOWER_FOUR_PLAYER2 = 2
+    WEIGHT_CAST_AWAY = 0
+
+
     def __init__(self, name="Agent"):
         self.name = name
 
@@ -36,6 +45,8 @@ class Agent:
         """
         #the received state is a tuple: 0:board, 1:player, 2:step
         board, player, step = state
+        ignored_mov = []
+        nbr_mov_yielded = 0
         for action in board.get_actions():
             if(not board.action_cover_my_tower_with_an_other_tower(action)):
                 newBoard = board.clone()
@@ -43,8 +54,19 @@ class Agent:
                 nextPlayer = player * -1
                 nextStep = step + 1
                 newState = (newBoard, nextPlayer, nextStep)
+                nbr_mov_yielded += 1
                 yield (action, newState)
-            #else ignore because the move is useless for us
+            else:
+                ignored_mov.append(action)
+        if nbr_mov_yielded == 0:
+            for action in ignored_mov:
+                newBoard = board.clone()
+                newBoard.play_action(action)
+                nextPlayer = player * -1
+                nextStep = step + 1
+                newState = (newBoard, nextPlayer, nextStep)
+                nbr_mov_yielded += 1
+                yield (action, newState)
 
     def cutoff(self, state, depth):
         """The cutoff function returns true if the alpha-beta/minimax
@@ -61,6 +83,9 @@ class Agent:
         representing the utility function of the board.
         """
         score = state[0].get_score()
+        score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
+        score += state[0].get_number_tower(self.WEIGHT_TOWER__PLAYER1, self.WEIGHT_TOWER__PLAYER2)
+        score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
         return score
 
     def play(self, board, player, step, time_left):

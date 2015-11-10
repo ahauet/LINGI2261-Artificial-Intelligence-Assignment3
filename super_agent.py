@@ -23,12 +23,14 @@ import minimax
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
-    WEIGHT_TOWER_FIVE_PLAYER1 = 2
+    WEIGHT_TOWER_FIVE_PLAYER1 = 100
     WEIGHT_TOWER_FIVE_PLAYER2 = 4
     WEIGHT_TOWER__PLAYER1 = 2
     WEIGHT_TOWER__PLAYER2 = 4
     WEIGHT_TOWER_FOUR_PLAYER1 = 4
     WEIGHT_TOWER_FOUR_PLAYER2 = 2
+    WEIGHT_CAST_AWAY_PLAYER1 = 10
+    WEIGHT_CAST_AWAY_PLAYER2 = 20
 
 
     def __init__(self, name="Agent"):
@@ -85,6 +87,7 @@ class Agent:
         score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
         score += state[0].get_number_tower(self.WEIGHT_TOWER__PLAYER1, self.WEIGHT_TOWER__PLAYER2)
         score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
+        score += state[0].cast_away(self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2)
         return score
 
     def play(self, board, player, step, time_left):

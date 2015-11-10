@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 """
+from random import randint
 
 PLAYER1 = 1
 PLAYER2 = -1
@@ -104,10 +105,18 @@ class Board:
         h -- height of the tower (absolute value) and owner (sign)
 
         """
-        for i in range(self.rows):
-            for j in range(self.columns):
-                if self.m[i][j]:
-                    yield (i, j, self.m[i][j])
+        max_x = self.rows
+        max_y = self.columns
+        i = randint(0,max_x-1)
+        j = randint(0,max_y-1)
+        print(i,j, max_x, max_y)
+        while i < max_x + i:
+            while j < max_y + j:
+                print(i,j, max_x, max_y)
+                if self.m[i%max_x][j%max_y]:
+                    yield (i, j, self.m[i%max_x][j%max_y])
+                j += 1
+            i += 1
 
     def is_action_valid(self, action):
         """Return whether action is a valid action."""
@@ -233,6 +242,21 @@ class Board:
                 elif self.m[i][j] == -4:
                     score += weight_player2
         return score
+
+    def cast_away(self, weight_player1, weight_player2):
+        score = 0
+        for i in range(self.rows):
+            for j in range(self.columns):
+                height = self.m[i][j]
+                if height > 0:
+                    if not self.is_tower_movable(i,j):
+                        score += (6-height) * weight_player1
+                elif height < 0:
+                    if not self.is_tower_movable(i,j):
+                        score -= (6-height) * weight_player2 * -1
+        return score
+
+
 
     def get_tower_at_the_origin_of_action(self, action):
         """
