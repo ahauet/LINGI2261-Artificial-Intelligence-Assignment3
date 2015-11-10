@@ -224,6 +224,16 @@ class Board:
                     result -= weight_player2
         return result
 
+    def get_number_tower_level_4(self,weight_player1, weight_player2):
+        score = 0
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.m[i][j] == 4:
+                    score -= weight_player1
+                elif self.m[i][j] == -4:
+                    score += weight_player2
+        return score
+
     def get_tower_at_the_origin_of_action(self, action):
         """
         Get a tower at pos (i,j) of the action

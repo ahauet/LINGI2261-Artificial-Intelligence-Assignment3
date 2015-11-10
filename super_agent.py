@@ -27,6 +27,8 @@ class Agent:
     WEIGHT_TOWER_FIVE_PLAYER2 = 4
     WEIGHT_TOWER__PLAYER1 = 2
     WEIGHT_TOWER__PLAYER2 = 4
+    WEIGHT_TOWER_FOUR_PLAYER1 = 4
+    WEIGHT_TOWER_FOUR_PLAYER2 = 2
 
 
     def __init__(self, name="Agent"):
@@ -82,6 +84,7 @@ class Agent:
         score = state[0].get_score()
         score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
         score += state[0].get_number_tower(self.WEIGHT_TOWER__PLAYER1, self.WEIGHT_TOWER__PLAYER2)
+        score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
         return score
 
     def play(self, board, player, step, time_left):
