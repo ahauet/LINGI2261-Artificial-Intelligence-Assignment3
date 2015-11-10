@@ -109,12 +109,12 @@ class Board:
         max_y = self.columns
         i = randint(0,max_x-1)
         j = randint(0,max_y-1)
-        print(i,j, max_x, max_y)
-        while i < max_x + i:
-            while j < max_y + j:
-                print(i,j, max_x, max_y)
+        nbrStepsI = i
+        nbrStepsj = j
+        while i < max_x + nbrStepsI:
+            while j < max_y + nbrStepsj:
                 if self.m[i%max_x][j%max_y]:
-                    yield (i, j, self.m[i%max_x][j%max_y])
+                    yield (i%max_x, j%max_y, self.m[i%max_x][j%max_y])
                 j += 1
             i += 1
 
