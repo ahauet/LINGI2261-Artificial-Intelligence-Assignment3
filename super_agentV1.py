@@ -30,7 +30,9 @@ class Agent:
     WEIGHT_TOWER_FOUR_PLAYER1 = 4
     WEIGHT_TOWER_FOUR_PLAYER2 = 2
     WEIGHT_CAST_AWAY = 0
-
+    WEIGHT_CAST_AWAY_PLAYER1 = 0
+    WEIGHT_CAST_AWAY_PLAYER2 = 0
+    WEIGHT_DONT_DO_THAT = 0
 
     def __init__(self, name="Agent"):
         self.name = name
@@ -82,10 +84,10 @@ class Agent:
         """The evaluate function must return an integer value
         representing the utility function of the board.
         """
-        score = state[0].get_score()
-        score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
-        score += state[0].get_number_tower(self.WEIGHT_TOWER__PLAYER1, self.WEIGHT_TOWER__PLAYER2)
-        score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
+        score = state[0].get_pimped_score(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2, self.WEIGHT_TOWER__PLAYER1,
+                                          self.WEIGHT_TOWER__PLAYER2, self.WEIGHT_TOWER_FOUR_PLAYER1, self.WEIGHT_TOWER_FOUR_PLAYER2,
+                                          self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2,self. WEIGHT_DONT_DO_THAT
+                                          )
         return score
 
     def play(self, board, player, step, time_left):

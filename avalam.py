@@ -248,7 +248,7 @@ class Board:
         if self.m[i][j] > 0:
             for action in actions:
                 (x, y, dx, dy) = action
-                if 5-abs(self.get_tower_at_the_origin_of_action(action)) == abs(self.get_tower_targeted_by_action(action)):
+                if abs(self.get_tower_at_the_origin_of_action(action)) + abs(self.get_tower_targeted_by_action(action))== 5:
                     score += weight
         return score
 
