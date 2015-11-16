@@ -249,6 +249,17 @@ class Board:
                         score +=weight
         return score
 
+    def have_a_tower_with_neighbor_that_complet_it(self, weight):
+        score = 0
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.m[i][j] > 0:
+                    for action in self.get_tower_actions(i, j)
+                        (x, y, dx, dy) = action
+                        if 5-abs(self.get_tower_at_the_origin_of_action(action)) == abs(self.get_tower_targeted_by_action(action)):
+                            score += weight
+        return score
+
 
     def cast_away(self, weight_player1, weight_player2):
         score = 0

@@ -92,6 +92,7 @@ class Agent:
         score += state[0].cast_away(self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2)
         score += state[0].get_score_not_great_tower_level_4(self.WEIGHT_DONT_DO_THAT)
         score += state[0].near_a_bad_cast_away(self.WEIGHT_DONT_DO_THAT)
+        score += state[0].have_a_tower_with_neighbor_that_complet_it(self.WEIGHT_DONT_DO_THAT)
 
         return score
 
