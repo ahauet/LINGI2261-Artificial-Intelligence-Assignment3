@@ -449,7 +449,7 @@ if __name__ == "__main__":
     if args.replay is None:
         # Normal play mode
         agents = [args.agent1, args.agent2]
-        credits = [None, None]
+        credits = [150, 150]
         for i in range(2):
             if agents[i] == 'human':
                 agents[i] = viewer

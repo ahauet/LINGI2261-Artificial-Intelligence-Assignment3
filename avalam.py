@@ -273,7 +273,7 @@ class Board:
                         print(len(tmp))
                         (x,y,dx,dy) = tmp[0]
                         if self.m[x][y] < 0:
-                            score+= weight
+                            score += weight
         return score
 
 
