@@ -263,6 +263,21 @@ class Board:
                         score += (6-abs(height)) * weight_player2
         return score
 
+    def near_a_bad_cast_away(self, weight):
+        score = 0
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.m[i][j] > 0:
+                    tmp = list(self.get_tower_actions(i,j))
+                    if len(tmp) == 1:
+                        print(len(tmp))
+                        (x,y,dx,dy) = tmp[0]
+                        if self.m[x][y] < 0:
+                            score+= weight
+        return score
+
+
+
 
 
     def get_tower_at_the_origin_of_action(self, action):

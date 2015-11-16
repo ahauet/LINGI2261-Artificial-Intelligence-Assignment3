@@ -91,6 +91,8 @@ class Agent:
         #score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
         score += state[0].cast_away(self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2)
         score += state[0].get_score_not_great_tower_level_4(self.WEIGHT_DONT_DO_THAT)
+        score += state[0].near_a_bad_cast_away(self.WEIGHT_DONT_DO_THAT)
+
         return score
 
     def play(self, board, player, step, time_left):
