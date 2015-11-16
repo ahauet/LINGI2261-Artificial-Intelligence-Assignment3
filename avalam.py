@@ -282,9 +282,9 @@ class Board:
     def near_a_bad_cast_away(self, i, j, action, weight):
         score = 0
         if self.m[i][j] > 0:
-                (x,y,dx,dy) = action
-                if self.m[x][y] < 0:
-                    score+= weight
+            (x,y,dx,dy) = action
+            if self.m[x][y] < 0:
+                score+= weight
         return score
 
 
