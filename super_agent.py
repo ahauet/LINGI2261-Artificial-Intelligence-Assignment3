@@ -23,17 +23,18 @@ import minimax
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
-    WEIGHT_TOWER_FIVE_PLAYER1 = 100
-    WEIGHT_TOWER_FIVE_PLAYER2 = 4
-    WEIGHT_TOWER__PLAYER1 = 2
-    WEIGHT_TOWER__PLAYER2 = 4
-    WEIGHT_TOWER_FOUR_PLAYER1 = 4
-    WEIGHT_TOWER_FOUR_PLAYER2 = 2
+    WEIGHT_TOWER_FIVE_PLAYER1 = 2
+    WEIGHT_TOWER_FIVE_PLAYER2 = -3
+    WEIGHT_TOWER__PLAYER1 = 1
+    WEIGHT_TOWER__PLAYER2 = -2
+    WEIGHT_TOWER_FOUR_PLAYER1 = 0
+    WEIGHT_TOWER_FOUR_PLAYER2 = 0
     WEIGHT_CAST_AWAY_PLAYER1 = 10
-    WEIGHT_CAST_AWAY_PLAYER2 = 20
+    WEIGHT_CAST_AWAY_PLAYER2 = -10
+    WEIGHT_DONT_DO_THAT = -100
 
 
-    def __init__(self, name="Agent"):
+    def __init__(self, name="Super Agent"):
         self.name = name
 
     def successors(self, state):
@@ -73,9 +74,10 @@ class Agent:
         """The cutoff function returns true if the alpha-beta/minimax
         search has to stop; false otherwise.
         """
+        max_depth = int(state[2] / 10 + 1.5)
         if(state[0].is_finished()):
             return True
-        if(depth >= 2):
+        if(depth >= max_depth):
             return True
         return False
 
@@ -86,8 +88,9 @@ class Agent:
         score = state[0].get_score()
         score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
         score += state[0].get_number_tower(self.WEIGHT_TOWER__PLAYER1, self.WEIGHT_TOWER__PLAYER2)
-        score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
+        #score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
         score += state[0].cast_away(self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2)
+        score += state[0].get_score_not_great_tower_level_4(self.WEIGHT_DONT_DO_THAT)
         return score
 
     def play(self, board, player, step, time_left):
@@ -97,6 +100,7 @@ class Agent:
         will perform.
         """
         self.time_left = time_left
+        print(time_left)
         newBoard = avalam.Board(board.get_percepts(player==avalam.PLAYER2)) #We are always the positive player
         state = (newBoard, player, step)
         return minimax.search(state, self)

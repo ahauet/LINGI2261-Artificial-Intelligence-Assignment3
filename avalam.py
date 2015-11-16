@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 """
-from random import randint
+from random import shuffle
 
 PLAYER1 = 1
 PLAYER2 = -1
@@ -105,18 +105,10 @@ class Board:
         h -- height of the tower (absolute value) and owner (sign)
 
         """
-        max_x = self.rows
-        max_y = self.columns
-        i = randint(0,max_x-1)
-        j = randint(0,max_y-1)
-        nbrStepsI = i
-        nbrStepsj = j
-        while i < max_x + nbrStepsI:
-            while j < max_y + nbrStepsj:
-                if self.m[i%max_x][j%max_y]:
-                    yield (i%max_x, j%max_y, self.m[i%max_x][j%max_y])
-                j += 1
-            i += 1
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if self.m[i][j]:
+                    yield (i, j, self.m[i][j])
 
     def is_action_valid(self, action):
         """Return whether action is a valid action."""
@@ -154,7 +146,11 @@ class Board:
 
     def get_actions(self):
         """Yield all valid actions on this board."""
+        towers = []
         for i, j, h in self.get_towers():
+            towers.append((i,j,h))
+        shuffle(towers)
+        for i,j,h in towers:
             for action in self.get_tower_actions(i, j):
                 yield action
 
@@ -218,7 +214,7 @@ class Board:
         for i in range(self.rows):
             for j in range(self.columns):
                 if self.m[i][j] < 0:
-                    score -= weight_player2
+                    score += weight_player2
                 elif self.m[i][j] > 0:
                     score += weight_player1
         return score
@@ -230,7 +226,7 @@ class Board:
                 if self.m[i][j] == 5:
                     result += weight_player1
                 elif self.m[i][j] == -5:
-                    result -= weight_player2
+                    result += weight_player2
         return result
 
     def get_number_tower_level_4(self,weight_player1, weight_player2):
@@ -238,10 +234,21 @@ class Board:
         for i in range(self.rows):
             for j in range(self.columns):
                 if self.m[i][j] == 4:
-                    score -= weight_player1
+                    score += weight_player1
                 elif self.m[i][j] == -4:
                     score += weight_player2
         return score
+
+
+    def get_score_not_great_tower_level_4(self, weight):
+        score = 0
+        for i in range(self.rows):
+            for j in range(self.columns):
+                if abs(self.m[i][j]) == 4:
+                    if (self.is_tower_movable(i,j)):
+                        score +=weight
+        return score
+
 
     def cast_away(self, weight_player1, weight_player2):
         score = 0
@@ -253,7 +260,7 @@ class Board:
                         score += (6-height) * weight_player1
                 elif height < 0:
                     if not self.is_tower_movable(i,j):
-                        score -= (6-height) * weight_player2 * -1
+                        score += (6-abs(height)) * weight_player2
         return score
 
 
