@@ -254,7 +254,7 @@ class Board:
         for i in range(self.rows):
             for j in range(self.columns):
                 if self.m[i][j] > 0:
-                    for action in self.get_tower_actions(i, j)
+                    for action in self.get_tower_actions(i, j):
                         (x, y, dx, dy) = action
                         if 5-abs(self.get_tower_at_the_origin_of_action(action)) == abs(self.get_tower_targeted_by_action(action)):
                             score += weight
@@ -281,7 +281,6 @@ class Board:
                 if self.m[i][j] > 0:
                     tmp = list(self.get_tower_actions(i,j))
                     if len(tmp) == 1:
-                        print(len(tmp))
                         (x,y,dx,dy) = tmp[0]
                         if self.m[x][y] < 0:
                             score += weight
