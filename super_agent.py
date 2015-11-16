@@ -99,6 +99,8 @@ class Agent:
         It must return an action representing the move the player
         will perform.
         """
+        print(step)
+        print(time_left)
         if step <= 2:
             self.init_time = time_left
         self.time_left = time_left
