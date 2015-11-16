@@ -85,14 +85,10 @@ class Agent:
         """The evaluate function must return an integer value
         representing the utility function of the board.
         """
-        score = state[0].get_score()
-        score += state[0].get_number_max_tower(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2)
-        score += state[0].get_number_tower(self.WEIGHT_TOWER__PLAYER1, self.WEIGHT_TOWER__PLAYER2)
-        #score += state[0].get_number_tower_level_4(self.WEIGHT_TOWER_FOUR_PLAYER1,self.WEIGHT_TOWER_FOUR_PLAYER2)
-        score += state[0].cast_away(self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2)
-        score += state[0].get_score_not_great_tower_level_4(self.WEIGHT_DONT_DO_THAT)
-        score += state[0].near_a_bad_cast_away(self.WEIGHT_DONT_DO_THAT)
-        score += state[0].have_a_tower_with_neighbor_that_complet_it(self.WEIGHT_DONT_DO_THAT)
+        score = state[0].get_pimped_score(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2, self.WEIGHT_TOWER__PLAYER1,
+                                          self.WEIGHT_TOWER__PLAYER2, self.WEIGHT_TOWER_FOUR_PLAYER1, self.WEIGHT_TOWER_FOUR_PLAYER2,
+                                          self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2,self. WEIGHT_DONT_DO_THAT
+                                          )
 
         return score
 

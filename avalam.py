@@ -205,28 +205,24 @@ class Board:
                         score += 1
         return score
 
-    def get_number_tower(self, weight_player1, weight_player2):
+    def get_number_tower(self, i, j, weight_player1, weight_player2):
         """
             Return the difference between the number of towers of each
             player.
         """
         score = 0
-        for i in range(self.rows):
-            for j in range(self.columns):
-                if self.m[i][j] < 0:
-                    score += weight_player2
-                elif self.m[i][j] > 0:
-                    score += weight_player1
+        if self.m[i][j] < 0:
+            score += weight_player2
+        elif self.m[i][j] > 0:
+            score += weight_player1
         return score
 
-    def get_number_max_tower(self, weight_player1, weight_player2):
+    def get_number_max_tower(self, i, j, weight_player1, weight_player2):
         result = 0
-        for i in range(self.rows):
-            for j in range(self.columns):
-                if self.m[i][j] == 5:
-                    result += weight_player1
-                elif self.m[i][j] == -5:
-                    result += weight_player2
+        if self.m[i][j] == 5:
+            result += weight_player1
+        elif self.m[i][j] == -5:
+            result += weight_player2
         return result
 
     def get_number_tower_level_4(self,weight_player1, weight_player2):
@@ -240,51 +236,55 @@ class Board:
         return score
 
 
-    def get_score_not_great_tower_level_4(self, weight):
+    def get_score_not_great_tower_level_4(self, i, j, weight):
         score = 0
-        for i in range(self.rows):
-            for j in range(self.columns):
-                if abs(self.m[i][j]) == 4:
-                    if (self.is_tower_movable(i,j)):
-                        score +=weight
+        if abs(self.m[i][j]) == 4:
+            if (self.is_tower_movable(i,j)):
+                score +=weight
         return score
 
-    def have_a_tower_with_neighbor_that_complet_it(self, weight):
+    def have_a_tower_with_neighbor_that_complet_it(self,i, j, actions, weight):
+        score = 0
+        if self.m[i][j] > 0:
+            for action in actions:
+                (x, y, dx, dy) = action
+                if 5-abs(self.get_tower_at_the_origin_of_action(action)) == abs(self.get_tower_targeted_by_action(action)):
+                    score += weight
+        return score
+
+    def get_pimped_score(self, WEIGHT_TOWER_FIVE_PLAYER1, WEIGHT_TOWER_FIVE_PLAYER2, WEIGHT_TOWER__PLAYER1, WEIGHT_TOWER__PLAYER2, WEIGHT_TOWER_FOUR_PLAYER1, WEIGHT_TOWER_FOUR_PLAYER2,
+                         WEIGHT_CAST_AWAY_PLAYER1, WEIGHT_CAST_AWAY_PLAYER2, WEIGHT_DONT_DO_THAT):
         score = 0
         for i in range(self.rows):
             for j in range(self.columns):
-                if self.m[i][j] > 0:
-                    for action in self.get_tower_actions(i, j)
-                        (x, y, dx, dy) = action
-                        if 5-abs(self.get_tower_at_the_origin_of_action(action)) == abs(self.get_tower_targeted_by_action(action)):
-                            score += weight
+                score += self.get_number_max_tower(i, j, WEIGHT_TOWER_FIVE_PLAYER1, WEIGHT_TOWER_FIVE_PLAYER2)
+                score += self.get_number_tower(i, j, WEIGHT_TOWER__PLAYER1,WEIGHT_TOWER__PLAYER2)
+                score += self.cast_away(i, j, WEIGHT_CAST_AWAY_PLAYER1, WEIGHT_CAST_AWAY_PLAYER2)
+                score += self.get_score_not_great_tower_level_4(i, j, WEIGHT_DONT_DO_THAT)
+                actions = list(self.get_tower_actions(i, j))
+                if len(actions) == 1:
+                    score += self.near_a_bad_cast_away(i, j, actions[0], WEIGHT_DONT_DO_THAT)
+                score += self.have_a_tower_with_neighbor_that_complet_it(i, j, actions, WEIGHT_DONT_DO_THAT)
         return score
 
 
-    def cast_away(self, weight_player1, weight_player2):
+    def cast_away(self, i, j, weight_player1, weight_player2):
         score = 0
-        for i in range(self.rows):
-            for j in range(self.columns):
-                height = self.m[i][j]
-                if height > 0:
-                    if not self.is_tower_movable(i,j):
-                        score += (6-height) * weight_player1
-                elif height < 0:
-                    if not self.is_tower_movable(i,j):
-                        score += (6-abs(height)) * weight_player2
+        height = self.m[i][j]
+        if height > 0:
+            if not self.is_tower_movable(i,j):
+                score += (6-height) * weight_player1
+        elif height < 0:
+            if not self.is_tower_movable(i,j):
+                score += (6-abs(height)) * weight_player2
         return score
 
-    def near_a_bad_cast_away(self, weight):
+    def near_a_bad_cast_away(self, i, j, action, weight):
         score = 0
-        for i in range(self.rows):
-            for j in range(self.columns):
-                if self.m[i][j] > 0:
-                    tmp = list(self.get_tower_actions(i,j))
-                    if len(tmp) == 1:
-                        print(len(tmp))
-                        (x,y,dx,dy) = tmp[0]
-                        if self.m[x][y] < 0:
-                            score+= weight
+        if self.m[i][j] > 0:
+                (x,y,dx,dy) = action
+                if self.m[x][y] < 0:
+                    score+= weight
         return score
 
 
