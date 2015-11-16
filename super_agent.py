@@ -74,7 +74,8 @@ class Agent:
         """The cutoff function returns true if the alpha-beta/minimax
         search has to stop; false otherwise.
         """
-        max_depth = int(state[2] / 10 + 1.5)
+        thinkable_time = (self.init_time - self.time_left) / 35
+        max_depth = int(state[2] / 10 + 1.6 + thinkable_time)
         if(state[0].is_finished()):
             return True
         if(depth >= max_depth):
@@ -98,6 +99,8 @@ class Agent:
         It must return an action representing the move the player
         will perform.
         """
+        if step <= 2:
+            self.init_time = time_left
         self.time_left = time_left
         print(time_left)
         newBoard = avalam.Board(board.get_percepts(player==avalam.PLAYER2)) #We are always the positive player
