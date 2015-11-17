@@ -57,8 +57,7 @@ class Agent:
         """The evaluate function must return an integer value
         representing the utility function of the board.
         """
-        score = state[0].get_score() * state[1] * -1
-        return score
+        return state[0].get_score()
 
     def play(self, board, player, step, time_left):
         """This function is used to play a move according
