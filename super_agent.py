@@ -19,6 +19,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 import avalam
 import minimax
+import time
 
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
@@ -74,8 +75,12 @@ class Agent:
         """The cutoff function returns true if the alpha-beta/minimax
         search has to stop; false otherwise.
         """
-        thinkable_time = (self.init_time - self.time_left) / 35
-        max_depth = int(state[2] / 10 + 1.6 + thinkable_time)
+        current_time = time.time()
+        elapsed_time = self.init_time - current_time
+        if self.time_left - elapsed_time < 10 :
+            max_depth = 1
+        else :
+            max_depth = int(state[2] / 10 + 1.6)
         if(state[0].is_finished()):
             return True
         if(depth >= max_depth):
@@ -99,8 +104,7 @@ class Agent:
         It must return an action representing the move the player
         will perform.
         """
-        if step <= 2:
-            self.init_time = time_left
+        self.init_time = time.time()
         self.time_left = time_left
         print(time_left)
         newBoard = avalam.Board(board.get_percepts(player==avalam.PLAYER2)) #We are always the positive player

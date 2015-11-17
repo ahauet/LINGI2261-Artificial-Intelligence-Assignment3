@@ -245,9 +245,9 @@ class Board:
 
     def have_a_tower_with_neighbor_that_complet_it(self,i, j, actions, weight):
         score = 0
-        if self.m[i][j] > 0:
-            for action in actions:
-                (x, y, dx, dy) = action
+        for action in actions:
+            (x, y, dx, dy) = action
+            if self.m[x][y] < 0 or self.m[dx][dy] < 0 :
                 if abs(self.get_tower_at_the_origin_of_action(action)) + abs(self.get_tower_targeted_by_action(action))== 5:
                     score += weight
         return score
