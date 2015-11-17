@@ -25,14 +25,14 @@ import time
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
-    WEIGHT_TOWER_FIVE_PLAYER1 = 2
-    WEIGHT_TOWER_FIVE_PLAYER2 = -3
+    WEIGHT_TOWER_FIVE_PLAYER1 = 4
+    WEIGHT_TOWER_FIVE_PLAYER2 = -5
     WEIGHT_TOWER__PLAYER1 = 1
-    WEIGHT_TOWER__PLAYER2 = -2
+    WEIGHT_TOWER__PLAYER2 = -1
     WEIGHT_TOWER_FOUR_PLAYER1 = 0
     WEIGHT_TOWER_FOUR_PLAYER2 = 0
     WEIGHT_CAST_AWAY_PLAYER1 = 10
-    WEIGHT_CAST_AWAY_PLAYER2 = -10
+    WEIGHT_CAST_AWAY_PLAYER2 = -15
     WEIGHT_DONT_DO_THAT = -100
 
     def __init__(self, name="Super Agent"):
