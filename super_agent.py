@@ -81,6 +81,7 @@ class Agent:
             max_depth = 1
         else :
             max_depth = int(state[2] / 10 + 1.6)
+
         if(state[0].is_finished()):
             return True
         if(depth >= max_depth):
@@ -105,8 +106,8 @@ class Agent:
         will perform.
         """
         self.init_time = time.time()
+
         self.time_left = time_left
-        print(time_left)
         newBoard = avalam.Board(board.get_percepts(player==avalam.PLAYER2)) #We are always the positive player
         state = (newBoard, player, step)
         return minimax.search(state, self)
