@@ -33,7 +33,7 @@ class Agent:
     WEIGHT_TOWER_FOUR_PLAYER2 = 0
     WEIGHT_CAST_AWAY_PLAYER1 = 10
     WEIGHT_CAST_AWAY_PLAYER2 = -15
-    WEIGHT_DONT_DO_THAT = -100
+    WEIGHT_DONT_DO_THAT = -50
 
     def __init__(self, name="Super Agent"):
         self.name = name
@@ -160,7 +160,7 @@ class Agent:
         self.init_time = time.time() #we store the time at the beginning of our tour to use it in cutoff to know if we can continue to think or not
         self.time_left = time_left
         self.current_player = player
-        
+
         new_board = avalam.Board(board.get_percepts(player == avalam.PLAYER2))  # We are always the positive player
         state = (new_board, player, step)
         result = minimax.search(state, self)
