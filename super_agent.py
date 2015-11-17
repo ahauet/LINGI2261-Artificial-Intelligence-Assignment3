@@ -37,6 +37,7 @@ class Agent:
 
     def __init__(self, name="Super Agent"):
         self.name = name
+        self.max_depth = 1 #at the beginning, we only explore one step
 
     def successors(self, state):
         """The successors function must return (or yield) a list of
@@ -79,22 +80,27 @@ class Agent:
         # first, let's check if the game is finished before computing some things
         if board.is_finished():
             return True
-        max_depth = 1  # by default
 
-        # en moyenne on joue 32 coups / partie
-        # on aimerait calculer le temps moyen d'un coup de profondeur 1
-        # puis au fur et à mesure que le jeu avance, augmenter le depth_max (en escalier)
-        # current_time = time.time()
-        # elapsed_time = self.init_time - current_time
+        self.compute_max_depth(step, self.time_left, time.time() - self.init_time, self.previous_step_time, self.total_time)
 
-        #if self.time_left - elapsed_time < 10:
-        #    max_depth = 1
-        #else:
-        #    max_depth = int(state[2] / 10 + 1.6)
-
-        if depth >= max_depth:
+        if depth >= int(self.max_depth):
             return True
         return False
+
+    def compute_max_depth(self, step, time_left, elapsed_time, previous_step_time, total_time):
+        if time_left - elapsed_time <= 10:
+            self.max_depth = 1
+        else:
+            if step <= 6 or step >= 30:
+                self.max_depth = 1
+            else:
+                middle_step = 18
+                distance_with_middle_step = abs(step - middle_step)
+                super_height = middle_step - distance_with_middle_step
+                factor = super_height / 24 # 24 because : 30 - 6; 30 = upper value for depth > 1; 6 = lower value for depth > 1;
+                self.max_depth = ((total_time/30) * factor) % (time_left - elapsed_time)
+
+
 
     def evaluate(self, state):
         """The evaluate function must return an integer value
@@ -116,13 +122,18 @@ class Agent:
         It must return an action representing the move the player
         will perform.
         """
-        self.init_time = time.time()
-
+        print(int(self.max_depth))
+        if step <= 2:
+            self.total_time = time_left #we store the total time that we have to play
+            self.previous_step_time = 1
+        self.init_time = time.time() #we store the time at the beginning of our tour to use it in cutoff to know if we can continue to think or not
         self.time_left = time_left
-        newBoard = avalam.Board(board.get_percepts(player == avalam.PLAYER2))  # We are always the positive player
-        state = (newBoard, player, step)
-        return minimax.search(state, self)
 
+        new_board = avalam.Board(board.get_percepts(player == avalam.PLAYER2))  # We are always the positive player
+        state = (new_board, player, step)
+        result = minimax.search(state, self)
+        self.previous_step_time = time.time() - self.init_time
+        return result
 
 if __name__ == "__main__":
     avalam.agent_main(Agent())
