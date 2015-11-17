@@ -21,6 +21,7 @@ import avalam
 import minimax
 import time
 
+
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
@@ -34,7 +35,6 @@ class Agent:
     WEIGHT_CAST_AWAY_PLAYER2 = -10
     WEIGHT_DONT_DO_THAT = -100
 
-
     def __init__(self, name="Super Agent"):
         self.name = name
 
@@ -46,45 +46,53 @@ class Agent:
         p is the player to play the next move and
         st is the next step number.
         """
-        #the received state is a tuple: 0:board, 1:player, 2:step
+        # the received state is a tuple: 0:board, 1:player, 2:step
         board, player, step = state
         ignored_mov = []
         nbr_mov_yielded = 0
         for action in board.get_actions():
-            if(not board.action_cover_my_tower_with_an_other_tower(action)):
-                newBoard = board.clone()
-                newBoard.play_action(action)
-                nextPlayer = player * -1
-                nextStep = step + 1
-                newState = (newBoard, nextPlayer, nextStep)
+            if not board.action_cover_my_tower_with_an_other_tower(action):
+                new_board = board.clone()
+                new_board.play_action(action)
+                next_player = player * -1
+                next_step = step + 1
+                new_state = (new_board, next_player, next_step)
                 nbr_mov_yielded += 1
-                yield (action, newState)
+                yield (action, new_state)
             else:
                 ignored_mov.append(action)
         if nbr_mov_yielded == 0:
             for action in ignored_mov:
-                newBoard = board.clone()
-                newBoard.play_action(action)
-                nextPlayer = player * -1
-                nextStep = step + 1
-                newState = (newBoard, nextPlayer, nextStep)
+                new_board = board.clone()
+                new_board.play_action(action)
+                next_player = player * -1
+                next_step = step + 1
+                new_state = (new_board, next_player, next_step)
                 nbr_mov_yielded += 1
-                yield (action, newState)
+                yield (action, new_state)
 
     def cutoff(self, state, depth):
         """The cutoff function returns true if the alpha-beta/minimax
         search has to stop; false otherwise.
         """
-        current_time = time.time()
-        elapsed_time = self.init_time - current_time
-        if self.time_left - elapsed_time < 10 :
-            max_depth = 1
-        else :
-            max_depth = int(state[2] / 10 + 1.6)
-
-        if(state[0].is_finished()):
+        board, player, step = state
+        # first, let's check if the game is finished before computing some things
+        if board.is_finished():
             return True
-        if(depth >= max_depth):
+        max_depth = 1  # by default
+
+        # en moyenne on joue 32 coups / partie
+        # on aimerait calculer le temps moyen d'un coup de profondeur 1
+        # puis au fur et à mesure que le jeu avance, augmenter le depth_max (en escalier)
+        # current_time = time.time()
+        # elapsed_time = self.init_time - current_time
+
+        #if self.time_left - elapsed_time < 10:
+        #    max_depth = 1
+        #else:
+        #    max_depth = int(state[2] / 10 + 1.6)
+
+        if depth >= max_depth:
             return True
         return False
 
@@ -92,9 +100,12 @@ class Agent:
         """The evaluate function must return an integer value
         representing the utility function of the board.
         """
-        score = state[0].get_pimped_score(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2, self.WEIGHT_TOWER__PLAYER1,
-                                          self.WEIGHT_TOWER__PLAYER2, self.WEIGHT_TOWER_FOUR_PLAYER1, self.WEIGHT_TOWER_FOUR_PLAYER2,
-                                          self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2,self. WEIGHT_DONT_DO_THAT
+        score = state[0].get_pimped_score(self.WEIGHT_TOWER_FIVE_PLAYER1, self.WEIGHT_TOWER_FIVE_PLAYER2,
+                                          self.WEIGHT_TOWER__PLAYER1,
+                                          self.WEIGHT_TOWER__PLAYER2, self.WEIGHT_TOWER_FOUR_PLAYER1,
+                                          self.WEIGHT_TOWER_FOUR_PLAYER2,
+                                          self.WEIGHT_CAST_AWAY_PLAYER1, self.WEIGHT_CAST_AWAY_PLAYER2,
+                                          self.WEIGHT_DONT_DO_THAT
                                           )
 
         return score
@@ -108,7 +119,7 @@ class Agent:
         self.init_time = time.time()
 
         self.time_left = time_left
-        newBoard = avalam.Board(board.get_percepts(player==avalam.PLAYER2)) #We are always the positive player
+        newBoard = avalam.Board(board.get_percepts(player == avalam.PLAYER2))  # We are always the positive player
         state = (newBoard, player, step)
         return minimax.search(state, self)
 
