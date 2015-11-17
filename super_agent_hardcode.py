@@ -25,14 +25,14 @@ import time
 class Agent:
     """This is the skeleton of an agent to play the Avalam game."""
 
-    WEIGHT_TOWER_FIVE_PLAYER1 = 2
-    WEIGHT_TOWER_FIVE_PLAYER2 = -3
+    WEIGHT_TOWER_FIVE_PLAYER1 = 4
+    WEIGHT_TOWER_FIVE_PLAYER2 = -5
     WEIGHT_TOWER__PLAYER1 = 1
-    WEIGHT_TOWER__PLAYER2 = -2
+    WEIGHT_TOWER__PLAYER2 = -1
     WEIGHT_TOWER_FOUR_PLAYER1 = 0
     WEIGHT_TOWER_FOUR_PLAYER2 = 0
     WEIGHT_CAST_AWAY_PLAYER1 = 10
-    WEIGHT_CAST_AWAY_PLAYER2 = -10
+    WEIGHT_CAST_AWAY_PLAYER2 = -15
     WEIGHT_DONT_DO_THAT = -100
 
     def __init__(self, name="Super Agent"):
@@ -75,9 +75,13 @@ class Agent:
                 nbr_mov_yielded += 1
             else:
                 ignored_mov.append(action)
-        list.sort(key=self.comp)
+
         #print("noeuds = ", nbr_mov_yielded)
         if nbr_mov_yielded > 0:
+            if player == self.current_player:
+                list.sort(key=self.comp,reverse=True)
+            else :
+                list.sort(key=self.comp,reverse=False)
             for action in list :
                 new_board = board.clone()
                 new_board.play_action(action)
@@ -86,7 +90,11 @@ class Agent:
                 new_state = (new_board, next_player, next_step)
                 yield((action,new_state))
         else:
-             for action in ignored_mov :
+            if player == self.current_player:
+                ignored_mov.sort(key=self.comp,reverse=True)
+            else :
+                ignored_mov.sort(key=self.comp,reverse=False)
+            for action in ignored_mov :
                 new_board = board.clone()
                 new_board.play_action(action)
                 next_player = player * -1
@@ -120,8 +128,10 @@ class Agent:
                 self.max_depth = 1
             elif step <= 14:
                 self.max_depth = 2
-            else :
+            elif step <= 30 :
                 self.max_depth = 3
+            else:
+                self.max_depth = 1
 
     def evaluate(self, state):
         """The evaluate function must return an integer value
@@ -149,7 +159,8 @@ class Agent:
             self.previous_step_time = 1
         self.init_time = time.time() #we store the time at the beginning of our tour to use it in cutoff to know if we can continue to think or not
         self.time_left = time_left
-
+        self.current_player = player
+        
         new_board = avalam.Board(board.get_percepts(player == avalam.PLAYER2))  # We are always the positive player
         state = (new_board, player, step)
         result = minimax.search(state, self)
