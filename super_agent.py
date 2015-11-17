@@ -123,9 +123,9 @@ class Agent:
                 distance_with_middle_step = abs(step - middle_step)
                 super_height = middle_step - distance_with_middle_step
                 factor = super_height / 24 # 24 because : 30 - 6; 30 = upper value for depth > 1; 6 = lower value for depth > 1;
-                self.max_depth = ((total_time/30) * factor) % (time_left - elapsed_time)
-
-
+                self.max_depth = (((total_time/30) * factor) % (time_left - elapsed_time))
+                if self.max_depth >= 5:
+                    self.max_depth = (self.max_depth%4) + 1 # never exceed a depth of 4
 
     def evaluate(self, state):
         """The evaluate function must return an integer value
