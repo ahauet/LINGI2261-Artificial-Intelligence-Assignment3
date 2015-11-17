@@ -39,6 +39,21 @@ class Agent:
         self.name = name
         self.max_depth = 1 #at the beginning, we only explore one step
 
+
+    def comp(self,action):
+        score1 = self.comparable_score
+        x1, y1, dx1, dy1 = action
+        if self.comparable_board.m[x1][y1] > 0 and self.comparable_board.m[dx1][dy1] < 0:
+            score1 += 3
+        elif self.comparable_board.m[x1][y1] < 0 and self.comparable_board.m[dx1][dy1] < 0:
+            score1 += 1
+        elif self.comparable_board.m[x1][y1] > 0 and self.comparable_board.m[dx1][dy1] > 0:
+            score1 += -1
+        else :
+            score1 == -3
+
+        return score1
+
     def successors(self, state):
         """The successors function must return (or yield) a list of
         pairs (a, s) in which a is the action played to reach the
@@ -51,26 +66,36 @@ class Agent:
         board, player, step = state
         ignored_mov = []
         nbr_mov_yielded = 0
+        list = []
+        self.comparable_board = board
+        self.comparable_score = board.get_score()
         for action in board.get_actions():
             if not board.action_cover_my_tower_with_an_other_tower(action):
-                new_board = board.clone()
-                new_board.play_action(action)
-                next_player = player * -1
-                next_step = step + 1
-                new_state = (new_board, next_player, next_step)
+                list.append(action)
                 nbr_mov_yielded += 1
-                yield (action, new_state)
             else:
                 ignored_mov.append(action)
-        if nbr_mov_yielded == 0:
-            for action in ignored_mov:
+        list.sort(key=self.comp)
+        #print("noeuds = ", nbr_mov_yielded)
+        if nbr_mov_yielded > 0:
+            for action in list :
                 new_board = board.clone()
                 new_board.play_action(action)
                 next_player = player * -1
                 next_step = step + 1
                 new_state = (new_board, next_player, next_step)
-                nbr_mov_yielded += 1
-                yield (action, new_state)
+                yield((action,new_state))
+        else:
+             for action in ignored_mov :
+                new_board = board.clone()
+                new_board.play_action(action)
+                next_player = player * -1
+                next_step = step + 1
+                new_state = (new_board, next_player, next_step)
+                yield((action,new_state))
+
+
+
 
     def cutoff(self, state, depth):
         """The cutoff function returns true if the alpha-beta/minimax

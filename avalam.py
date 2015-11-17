@@ -149,7 +149,6 @@ class Board:
         towers = []
         for i, j, h in self.get_towers():
             towers.append((i,j,h))
-        shuffle(towers)
         for i,j,h in towers:
             for action in self.get_tower_actions(i, j):
                 yield action
